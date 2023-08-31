@@ -1,7 +1,12 @@
 <?php
 include_once("connect.php");
 
-$sql = "SELECT * FROM restaurant";
+if (!isset($_GET['city']))
+    $city = 1;
+else
+    $city = $_GET['city'];
+
+$sql = "SELECT * FROM restaurant WHERE city = " . $city;
 $result = $conn->query($sql);
 if ($result === false) {
     // echo "Error executing the query: " . $conn->error;

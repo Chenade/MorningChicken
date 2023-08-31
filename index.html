@@ -30,7 +30,7 @@
 		}
 
 		.about-us {
-			height: 100px;
+			/* height: 0px; */
 			display: flex;
 			background-color: gray;
 			justify-content: center;
@@ -89,16 +89,21 @@
 	<div class="dropdowns">
 		<div class="col-4 d-flex">
 			<h6>選擇區域：</h6>
-			<select id="regionDropdown" class="form-select form-select-lg" aria-label="Region select">
-				<option value="1">北部</option>
-				<option value="2" selected>中部</option>
-				<option value="3">南部</option>
+			<select id="regionDropdown" class="form-select form-select-lg col-8" aria-label="Region select">
+				<option value="north" selected>北部</option>
+				<option value="middle">中部</option>
+				<option value="south">南部</option>
+				<option value="outlying">花東離島</option>
 			</select>
 		</div>
 		<div class="col-5 d-flex">
 			<h6>選擇縣市：</h6>
-			<select id="subregionDropdown" class="form-select form-select-lg" aria-label="Subregion select">
-				<option selected>Open this select menu</option>
+			<select id="subregionDropdown" class="form-select form-select-lg col-8" aria-label="Subregion select">
+				<option value="1">新北市</option>
+				<option value="2">桃園市</option>
+				<option value="3">新竹市</option>
+				<option value="4">新竹縣</option>
+				<option value="5">苗栗縣</option>
 			</select>
 		</div>
     </div>
@@ -121,8 +126,7 @@
 		</div>
 	</div>
 	<div class="about-us">
-		<h2>About Us</h2>
-		<p>This is a brief description of the development team...</p>
+		<p>Copyright © 2023 All rights reserved</p>
 	</div>
 
 	<script src="https://code.jquery.com/jquery-3.7.0.js" integrity="sha256-JlqSTELeR4TLqP0OG9dxM7yDPqX1ox/HfgiSLBj8+kM=" crossorigin="anonymous"></script>
@@ -134,62 +138,86 @@
 
 
 <script>
+
+	
+function getRestaurants(city) {
+		$.ajax({
+			url: 'backend/restaurants.php?city=' + city,
+			method: 'GET',
+			dataType: 'json',
+			success: function(response) {
+				$('.restaurant-cards').empty();
+				for(var i = 0; i < response.length; i++) {
+					var card = $('<div class="card" data-city="' + response[i].city + '"></div>');
+					var cardHeader = $('<div class="d-flex justify-content-center col-12 mb-3"></div>');
+					var cardImg = $('<img src="./image/restaurant.png" class="card-img-top" alt="...">');
+					var cardBody = $('<div class="d-flex justify-content-between col-12"></div>');
+					var cardTitle = $('<div class="d-flex"></div>');
+					var cardTitleText = $('<h5>' + response[i].name + '</h5>');
+					var cardTitleLink = $('<a href="' + response[i].google_map + '" target="_blank">&ensp;<i class="fa-solid fa-location-dot"></i></a>');
+					var cardRating = $('<div><i class="fa-solid fa-star"></i>&nbsp;' + response[i].star + '</div>');
+					var cardFooter = $('<div class="d-flex justify-content-center col-12"></div>');
+					var cardButton = $('<button class="btn btn-outline-success col-12" onClick=location.href="menu.html?id=' + response[i].id + '">立即訂餐</button>');
+
+					cardTitle.append(cardTitleText);
+					cardTitle.append(cardTitleLink);
+					cardHeader.append(cardImg);
+					cardBody.append(cardTitle);
+					cardBody.append(cardRating);
+					cardFooter.append(cardButton);
+					card.append(cardHeader);
+					card.append(cardBody);
+					card.append(cardFooter);
+					$('.restaurant-cards').append(card);
+				}
+			},
+			error: function(xhr, status, error) {
+				console.log('Request failed: ' + status);
+			}
+		});
+	}
+
 	$(document).ready(function() {
+
+		getRestaurants('1');
+
 		$('#regionDropdown').change(function() {
 			var selectedRegion = $(this).val();
 			var subregionDropdown = $('#subregionDropdown');
 			
 			subregionDropdown.empty();
 			
-			if (selectedRegion === '1') {
-				subregionDropdown.append('<option value="1">One</option>');
-				subregionDropdown.append('<option value="2">Two</option>');
-				subregionDropdown.append('<option value="3">Three</option>');
-			} else if (selectedRegion === '2') {
-				subregionDropdown.append('<option value="4">Four</option>');
-				subregionDropdown.append('<option value="5">Five</option>');
-				subregionDropdown.append('<option value="6">Six</option>');
-			} else if (selectedRegion === '3') {
-				subregionDropdown.append('<option value="7">Seven</option>');
-				subregionDropdown.append('<option value="8">Eight</option>');
-				subregionDropdown.append('<option value="9">Nine</option>');
+			if (selectedRegion === 'north') {
+				subregionDropdown.append('<option value="1">新北市</option>');
+				subregionDropdown.append('<option value="2">桃園市</option>');
+				subregionDropdown.append('<option value="3">新竹市</option>');
+				subregionDropdown.append('<option value="4">新竹縣</option>');
+				subregionDropdown.append('<option value="5">苗栗縣</option>');
+			} else if (selectedRegion === 'middle') {
+				subregionDropdown.append('<option value="6">台中市</option>');
+				subregionDropdown.append('<option value="7">南投縣</option>');
+				subregionDropdown.append('<option value="8">彰化縣</option>');
+			} else if (selectedRegion === 'south') {
+				subregionDropdown.append('<option value="9">雲林縣</option>');
+				subregionDropdown.append('<option value="10">台南市</option>');
+				subregionDropdown.append('<option value="11">高雄市</option>');
 			}
+			else if (selectedRegion === 'outlying') {
+				subregionDropdown.append('<option value="12">澎湖縣</option>');
+				subregionDropdown.append('<option value="13">金門縣</option>');
+				subregionDropdown.append('<option value="14">台東縣</option>');
+			subregionDropdown.append('<option value="14">宜蘭縣</option>');
+			}
+			subregionDropdown.val(subregionDropdown.find('option:first').val());
+			getRestaurants($('#subregionDropdown').val());
+		});
+
+		$('#subregionDropdown').change(function() {
+			var selectedRegion = $(this).val();
+			getRestaurants(selectedRegion);
 		});
 	});
 
-	$.ajax({
-                url: 'backend/restaurants.php',
-                method: 'GET',
-                dataType: 'json',
-                success: function(response) {
-					$('.restaurant-cards').empty();
-					for(var i = 0; i < response.length; i++) {
-						var card = $('<div class="card" data-city="' + response[i].city + '"></div>');
-						var cardHeader = $('<div class="d-flex justify-content-center col-12 mb-3"></div>');
-						var cardImg = $('<img src="./image/restaurant.png" class="card-img-top" alt="...">');
-						var cardBody = $('<div class="d-flex justify-content-between col-12"></div>');
-						var cardTitle = $('<div class="d-flex"></div>');
-						var cardTitleText = $('<h5>' + response[i].name + '</h5>');
-						var cardTitleLink = $('<a href="' + response[i].google_map + '" target="_blank">&ensp;<i class="fa-solid fa-location-dot"></i></a>');
-						var cardRating = $('<div><i class="fa-solid fa-star"></i>&nbsp;' + response[i].star + '</div>');
-						var cardFooter = $('<div class="d-flex justify-content-center col-12"></div>');
-						var cardButton = $('<button class="btn btn-outline-success col-12" onClick=location.href="menu.html?id=' + response[i].id + '">立即訂餐</button>');
 
-						cardTitle.append(cardTitleText);
-						cardTitle.append(cardTitleLink);
-						cardHeader.append(cardImg);
-						cardBody.append(cardTitle);
-						cardBody.append(cardRating);
-						cardFooter.append(cardButton);
-						card.append(cardHeader);
-						card.append(cardBody);
-						card.append(cardFooter);
-						$('.restaurant-cards').append(card);
-					}
-                },
-                error: function(xhr, status, error) {
-                    console.log('Request failed: ' + status);
-                }
-            });
 </script>
 
