@@ -15,21 +15,15 @@
 			display: flex	;
 			flex-wrap: wrap;
 			justify-content: space-around;
-			height: 75vh;
+			height: 58vh;
 			overflow-y: auto;
 			
 		}
 
 		.menuCard{
-			border-radius: 15px;
 			border: solid #bbb 1px;
-			min-height: 250px;
-			display: flex;
-			flex-direction: column;
-			justify-content: space-around;
-			align-items: center;
 			padding: 10px;
-			margin: 0;
+			margin: 10px;
 			box-shadow: 9px 10px 5px -5px #CACACA;
 		}
 
@@ -43,16 +37,18 @@
 </head>
 <body>
 	<nav class="navbar navbar-expand-lg navbar-light bg-light">
-		<a class="navbar-brand" href="#">早安公雞 農場晨食</a>
-		<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-			<span class="navbar-toggler-icon"></span>
-		</button>
+		<a class="navbar-brand" href="/">早安公雞 農場晨食</a>
+		<ul class="nav justify-content-center ml-auto">
+			<li class="nav-item">
+			  <a class="nav-link" id="cart-btn" tabindex="-1">購物車</a>
+			</li>
+		</ul>
 	</nav>
 
-	<div class="d-flex justify-content-center" style="margin: 20px 50px;">
-		<div class="d-flex flex-column justify-content-center" id="info">
+	<div class="d-flex flex-wrap justify-content-center" style="margin: 20px 50px;">
+		<div class="col-12 col-sm-5 col-lg-4 d-flex flex-column justify-content-center" id="info">
 		</div>
-		<div class="col-8">
+		<div class="col-12 col-sm-7 col-lg-8">
 			<div id="carouselIndicators" class="carousel slide" data-ride="carousel">
 				<ol class="carousel-indicators">
 					<li data-target="#carouselIndicators" data-slide-to="0" class="active"></li>
@@ -61,14 +57,13 @@
 				</ol>
 				<div class="carousel-inner">
 					<div class="carousel-item active">
-					<img class="d-block w-100" src="./image/banner.png" alt="First slide">
+						<img class="d-block w-100" src="./image/banner.png" alt="First slide">
 					</div>
 					<div class="carousel-item">
-					<img class="d-block w-100" src="./image/banner.png" alt="Second slide">
+						<img class="d-block w-100" src="./image/banner.png" alt="Second slide">
 					</div>
 					<div class="carousel-item">
-					<img class="d-block w-100" src="./image/banner.png" alt="Third slide">
-					</div>
+						<img class="d-block w-100" src="./image/banner.png" alt="Third slide">
 					</div>
 					<a class="carousel-control-prev" href="#carouselIndicators" role="button" data-slide="prev">
 						<span class="carousel-control-prev-icon" aria-hidden="true"></span>
@@ -80,69 +75,43 @@
 					</a>
 				</div>
 			</div>
-
 		</div>
 	</div>
 
 	<hr>
 
-	<div class="d-flex">
-		<div class="col-2" style="height: 75vh; overflow-y: auto;">
-			<hr>
-			<a href="#" onclick="getMenu('A')">
-				<div class="d-flex flex-column align-items-center">
-					<img src="./image/restaurant.png" alt="restaurant" style="width: 60%;">
-					<p>公雞老麵堡</p>
-				</div>
-			</a>
-			<hr>
-			<a href="#" onclick="getMenu('B')">
-				<div class="d-flex flex-column align-items-center">
-					<img src="./image/restaurant.png" alt="restaurant" style="width: 60%;">
-					<p>母雞蛋煎餅</p>
-				</div>
-			</a>
-			<hr>
-			<a href="#" onclick="getMenu('C')">
-				<div class="d-flex flex-column align-items-center">
-					<img src="./image/restaurant.png" alt="restaurant" style="width: 60%;">
-					<p>小雞愛吐司<br>(抹醬系列)</p>
-				</div>
-			</a>
-			<hr>
-			<a href="#" onclick="getMenu('D')">
-				<div class="d-flex flex-column align-items-center">
-					<img src="./image/restaurant.png" alt="restaurant" style="width: 60%;">
-					<p>小雞愛吐司</p>
-				</div>
-			</a>
-			<hr>
-			<a href="#" onclick="getMenu('E')">
-				<div class="d-flex flex-column align-items-center">
-					<img src="./image/restaurant.png" alt="restaurant" style="width: 60%;">
-					<p>烏冬熱熱炒</p>
-				</div>
-			</a>
-			<hr>
-			<a href="#" onclick="getMenu('F')">
-				<div class="d-flex flex-column align-items-center">
-					<img src="./image/restaurant.png" alt="restaurant" style="width: 60%;">
-					<p>農場小點心</p>
-				</div>
-			</a>
-			<hr>
-			<a href="#" onclick="getMenu('G')">
-				<div class="d-flex flex-column align-items-center">
-					<img src="./image/restaurant.png" alt="restaurant" style="width: 60%;">
-					<p>一日早晨飲</p>
-				</div>
-			</a>
-			<hr>
+	<div class="d-flex flex-wrap">
+		<div class="col-4 col-lg-2 d-flex flex-wrap" style="max-height: 58vh; overflow-y: auto;">
+			<div  class="d-flex flex-column align-items-center" style="width:150px; height: 150px;" onclick="getMenu('A')">
+				<img src="./image/restaurant.png" alt="restaurant" style="width: 60%;">
+				<p>公雞老麵堡</p>
+			</div>
+			<div  class="d-flex flex-column align-items-center" style="width:150px; height: 150px;" onclick="getMenu('B')">
+				<img src="./image/restaurant.png" alt="restaurant" style="width: 60%;">
+				<p>母雞蛋煎餅</p>
+			</div>
+			<div  class="d-flex flex-column align-items-center" style="width:150px; height: 180px;" onclick="getMenu('C')">
+				<img src="./image/restaurant.png" alt="restaurant" style="width: 60%;">
+				<p>小雞愛吐司<br>(抹醬系列)</p>
+			</div>
+			<div  class="d-flex flex-column align-items-center" style="width:150px; height: 150px;" onclick="getMenu('D')">
+				<img src="./image/restaurant.png" alt="restaurant" style="width: 60%;">
+				<p>小雞愛吐司</p>
+			</div>
+			<div  class="d-flex flex-column align-items-center" style="width:150px; height: 150px;" onclick="getMenu('E')">
+				<img src="./image/restaurant.png" alt="restaurant" style="width: 60%;">
+				<p>烏冬熱熱炒</p>
+			</div>
+			<div  class="d-flex flex-column align-items-center" style="width:150px; height: 150px;" onclick="getMenu('F')">
+				<img src="./image/restaurant.png" alt="restaurant" style="width: 60%;">
+				<p>農場小點心</p>
+			</div>
+			<div  class="d-flex flex-column align-items-center" style="width:150px; height: 150px;" onclick="getMenu('G')">
+				<img src="./image/restaurant.png" alt="restaurant" style="width: 60%;">
+				<p>一日早晨飲</p>
+			</div>
 		</div>
-		<div class="col-8 menuList">
-
-		</div>
-		<div class="col-2" style="height:75vh; background-color: cyan;">
+		<div class="col-8 col-lg-10 menuList">
 
 		</div>
 	</div>
@@ -208,16 +177,15 @@
 					for (const i in response) {
 						let _this = response[i];
 						$('.menuList').append(`
-								<div class="col-12 col-md-4 col-lg-3 mb-3">
-									<div class="menuCard">
-										<img src="./image/${_this.image}" width="100%" height="100%" alt="meals-pic">
-										<h4>${_this.name}</h4>
-										<div class="d-flex justify-content-between align-items-center">
-											<div class="col-9" style="padding: 0;">NT$ ${_this.price}</div>
-											<div class="col-3" style="padding: 0;"><button class="btn btn-outline-primary"> + </button></div>
-										</div>
+								<div class="card menuCard" style="width: 18rem;">
+									<img src="./image/${_this.image}" class="card-img-top" alt="meals-pic">
+									<div class="card-body">
+										<h5 class="card-title">${_this.name}</h5>
+										<p class="card-text">NT$ ${_this.price}</p>
+										<a href="#" class="btn btn-primary"> + </a>
 									</div>
-								</div>`);
+								</div>
+								`);
 					}
 				},
 				error: function(xhr, status, error) {
