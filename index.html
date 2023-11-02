@@ -17,6 +17,7 @@
 			display: flex;
 			justify-content: center;
 			align-items: center;
+			flex-wrap: wrap;
 		}
 
 		.restaurant-cards {
@@ -56,10 +57,12 @@
 </head>
 <body>
 	<nav class="navbar navbar-expand-lg navbar-light bg-light">
-		<a class="navbar-brand" href="#">早安公雞 農場晨食</a>
-		<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-			<span class="navbar-toggler-icon"></span>
-		</button>
+		<a class="navbar-brand" href="./">早安公雞 農場晨食</a>
+		<ul class="nav justify-content-center ml-auto">
+			<li class="nav-item">
+			  <a class="nav-link" id="cart-btn" tabindex="-1">購物車</a>
+			</li>
+		</ul>
 	</nav>
 
 	<div id="carouselIndicators" class="carousel slide" data-ride="carousel">
@@ -89,7 +92,7 @@
 			</a>
 		</div>
 	<div class="dropdowns">
-		<div class="col-4 d-flex">
+		<div class="col-12 col-sm-5 d-flex">
 			<h6>選擇區域：</h6>
 			<select id="regionDropdown" class="form-select form-select-lg col-8" aria-label="Region select">
 				<option value="north" selected>北部</option>
@@ -98,7 +101,7 @@
 				<option value="outlying">花東離島</option>
 			</select>
 		</div>
-		<div class="col-5 d-flex">
+		<div class="col-12 col-sm-5 d-flex">
 			<h6>選擇縣市：</h6>
 			<select id="subregionDropdown" class="form-select form-select-lg col-8" aria-label="Subregion select">
 				<option value="1">新北市</option>
