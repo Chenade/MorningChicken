@@ -159,7 +159,7 @@ function getRestaurants(city) {
 					var cardBody = $('<div class="d-flex justify-content-between col-12"></div>');
 					var cardTitle = $('<div class="d-flex"></div>');
 					var cardTitleText = $('<h5>' + response[i].name + '</h5>');
-					var cardTitleLink = $('<a href="' + response[i].google_map + '" target="_blank">&ensp;<i class="fa-solid fa-location-dot"></i></a>');
+					var cardTitleLink = $('<a href="' + response[i].google + '" target="_blank">&ensp;<i class="fa-solid fa-location-dot"></i></a>');
 					var cardRating = $('<div><i class="fa-solid fa-star"></i>&nbsp;' + response[i].star + '</div>');
 					var cardFooter = $('<div class="d-flex justify-content-center col-12"></div>');
 					var cardButton = $('<button class="btn btn-outline-success col-12" onClick=location.href="menu.html?id=' + response[i].id + '">立即訂餐</button>');
