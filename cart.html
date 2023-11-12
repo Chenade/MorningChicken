@@ -1,0 +1,198 @@
+<!doctype html>
+<html lang="en">
+<head>
+	<!-- Required meta tags -->
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+	<!-- Bootstrap CSS -->
+	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.4.1/dist/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" integrity="sha512-z3gLpd7yknf1YoNbCzqRKc4qyor8gaKU1qmn+CShxbuBusANI9QpRohGBreCFkKxLhei6S9CQXFEbbKuqLg0DA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+
+	<style>
+		.menuList
+		{
+			display: flex	;
+			flex-wrap: wrap;
+			justify-content: space-around;
+			height: 58vh;
+			overflow-y: auto;
+			
+		}
+
+		.menuCard{
+			border: solid #bbb 1px;
+			padding: 10px;
+			margin: 10px;
+			box-shadow: 9px 10px 5px -5px #CACACA;
+		}
+
+		a, a:hover, a:active, a:visited{
+			text-decoration: none;
+			color: black;
+		}
+
+	</style>
+	<title>早安公雞</title>
+</head>
+<body>
+	<nav class="navbar navbar-expand-lg navbar-light bg-light">
+		<a class="navbar-brand" href="./">早安公雞 農場晨食</a>
+		<ul class="nav justify-content-center ml-auto">
+			<li class="nav-item">
+			  <a class="nav-link" href="./cart.html" >購物車</a>
+			</li>
+		</ul>
+	</nav>
+	
+	<div class="d-flex flex-wrap justify-content-center" style="margin: 20px 50px; min-height: fit-content;">
+		<div class="col-12 col-lg-8">
+			<table class="table table-striped">
+				<thead>
+					<tr>
+						<th scope="col">商品名稱</th>
+						<th scope="col">單價</th>
+						<th scope="col">數量</th>
+						<th scope="col">小計</th>
+						<th scope="col">操作</th>
+					</tr>
+				</thead>
+				<tbody id="cart">
+				</tbody>
+			</table>
+		</div>
+		
+		<div class="col-12 col-lg-4" id="info">
+			<div class="card">
+				<div class="card-body">
+					<div class="form-group">
+						<label for="restaurant_name">取餐餐廳</label>
+						<input text="text" class="form-control" id="restaurant_name" placeholder="請輸入取餐餐廳" disabled>
+					</div>
+					<h5 class="card-title">取餐資訊</h5>
+					<div class="form-group">
+						<label for="name">取餐人姓名</label>
+						<input text="text" class="form-control" id="name" placeholder="請輸入取餐人姓名">
+					</div>
+					<div class="form-group">
+						<label for="phone">取餐人電話</label>
+						<input text="text" class="form-control" id="phone" placeholder="請輸入取餐人電話">
+					</div>
+					<div class="form-group">
+						<label for="pickup_time">取餐時間</label>
+						<select class="form-control" id="pickup_time">
+							<option value="0800">早上 8 點</option>
+							<option value="0900">早上 9 點</option>
+							<option value="1000">早上 10 點</option>
+							<option value="1100">早上 11 點</option>
+							<option value="1200">中午 12 點</option>
+							<option value="1300">中午 1 點</option>
+							<option value="1400">中午 2 點</option>
+						</select>
+					</div>
+				</div>
+			</div>
+			<div class="card">
+				<div class="card-body">
+					<h5 class="card-title">訂單資訊</h5>
+					<p class="card-text">總金額: <span id="totalPrice"></span></p>
+					<p class="card-text">總數量: <span id="totalQuantity"></span></p>
+				</div>
+			</div>
+			<button type="button" class="btn btn-primary btn-lg btn-block" onclick="submitOrder()">送出訂單</button>
+		</div>
+	</div>
+
+	<script src="https://code.jquery.com/jquery-3.7.0.js" integrity="sha256-JlqSTELeR4TLqP0OG9dxM7yDPqX1ox/HfgiSLBj8+kM=" crossorigin="anonymous"></script>
+	<script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
+	<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.4.1/dist/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/js/all.min.js" integrity="sha512-uKQ39gEGiyUJl4AI6L+ekBdGKpGw4xJ55+xyJG7YFlJokPNYegn9KwQ3P8A7aFQAUtUsAQHep+d/lrGqrbPIDQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+</body>
+</html>
+
+
+<script>
+
+	function removeItem(index)
+	{
+		const cart = JSON.parse(localStorage.getItem('cart'));
+		cart.splice(index, 1);
+		localStorage.setItem('cart', JSON.stringify(cart));
+		displayCart();
+	}
+
+	function displayCart()
+	{
+		$('#restaurant_name').val(localStorage.getItem('restaurant_name'));
+		const cart = JSON.parse(localStorage.getItem('cart'));
+		let totalPrice = 0;
+		let totalQuantity = 0;
+		$('#cart').empty();
+		for(const i in cart)
+		{
+			const item = cart[i];
+			totalPrice += item.price * item.quantity;
+			totalQuantity += item.quantity;
+			$('#cart').append(`
+				<tr>
+					<td>${item.name}</td>
+					<td>${item.price}</td>
+					<td>${item.quantity}</td>
+					<td>${item.quantity * item.price}</td>
+					<td><button class="btn btn-danger" onclick="removeItem(${i})">刪除</button></td>
+				</tr>
+			`);
+		}
+		$('#totalPrice').text(totalPrice);
+		$('#totalQuantity').text(totalQuantity);
+	}
+
+	function submitOrder()
+	{
+		const cart = JSON.parse(localStorage.getItem('cart'));
+		const restaurant_name = $('#restaurant_name').val();
+		const time = $('#pickup_time').val();
+		const name = $('#name').val();
+		const phone = $('#phone').val();
+		if (name == '' || phone == '')
+		{
+			alert('請輸入取餐人姓名及電話');
+			return;
+		}
+		const data = {
+			'restaurant_name': restaurant_name,
+			'time': time,
+			'name': name,
+			'phone': phone,
+			'cart': cart,
+			'time': time
+		};
+		console.log(data);
+		$.ajax({
+			url: 'backend/order.php',
+			method: 'POST',
+			dataType: 'json',
+			data,
+			success: function(response) {
+				if(response)
+				{
+					alert('訂單送出成功');
+					// localStorage.removeItem('cart');
+					// location.href = './';
+				}
+				else
+				{
+					alert('訂單送出失敗');
+				}
+			},
+			error: function(xhr, status, error) {
+				console.log('Request failed: ' + status);
+			}
+		});
+	}
+	$(document).ready(function() {
+		displayCart();
+	});
+
+</script>
+

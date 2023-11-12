@@ -40,7 +40,7 @@
 		<a class="navbar-brand" href="./">早安公雞 農場晨食</a>
 		<ul class="nav justify-content-center ml-auto">
 			<li class="nav-item">
-			  <a class="nav-link" id="cart-btn" tabindex="-1">購物車</a>
+			  <a class="nav-link" href="./cart.html" >購物車</a>
 			</li>
 		</ul>
 	</nav>
@@ -151,7 +151,7 @@
 				{
 					let _this = response[0];
 					$('#info').empty();
-					$('#info').append('<h3>' + _this.name + '</h3>');
+					$('#info').append('<h3 id="restaurant_name">' + _this.name + '</h3>');
 					$('#info').append('<h6>' + _this.address + '</h6>');
 					$('#info').append('<h6>' + _this.telephone + '</h6>');
 					$('#info').append('<div><i class="fa-solid fa-star"></i>&nbsp;' + _this.star + '</div>');
@@ -182,7 +182,7 @@
 									<div class="card-body">
 										<h5 class="card-title">${_this.name}</h5>
 										<p class="card-text">NT$ ${_this.price}</p>
-										<a href="#" class="btn btn-primary"> + </a>
+										<button class="addCart btn btn-primary"> + </button>
 									</div>
 								</div>
 								`);
@@ -195,7 +195,42 @@
 	}
 
 	$(document).ready(function() {
-		getMenu('A')
+		getMenu('A');
+
+		$(document).on('click', '.addCart', function() {
+			let _this = $(this).parent().parent();
+			let name = _this.find('.card-title').text();
+			let price = _this.find('.card-text').text().replace('NT$ ', '');
+			let id = getUrlParameter('id');
+
+			const restaurant_name = $('#restaurant_name').text();
+			localStorage.setItem('restaurant_name', restaurant_name);
+
+			// add to local storage
+			let cart = JSON.parse(localStorage.getItem('cart'));
+			if (cart == null)
+			{
+				cart = [];
+			}
+			else
+			{
+				for (const i in cart) {
+					if (cart[i].id == id && cart[i].name == name)
+					{
+						cart[i].quantity++;
+						localStorage.setItem('cart', JSON.stringify(cart));
+						return;
+					}
+				}
+			}
+			cart.push({
+				'id': id,
+				'name': name,
+				'price': price,
+				'quantity': 1
+			});
+			localStorage.setItem('cart', JSON.stringify(cart));
+		});
 	});
 
 </script>
