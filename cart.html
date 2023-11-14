@@ -108,6 +108,21 @@
 	<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.4.1/dist/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/js/all.min.js" integrity="sha512-uKQ39gEGiyUJl4AI6L+ekBdGKpGw4xJ55+xyJG7YFlJokPNYegn9KwQ3P8A7aFQAUtUsAQHep+d/lrGqrbPIDQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 </body>
+
+<div class="modal fade" id="submitModal" tabindex="-1" aria-labelledby="submitModalLabel" aria-hidden="true">
+	<div class="modal-dialog modal-dialog-centered">
+		<div class="modal-content">
+		<div class="modal-header">
+			<h5 class="modal-title" id="submitModalLabel">送出訂單成功</h5>
+			<!-- <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">X</button> -->
+		</div>
+		<div class="modal-footer">
+			<button type="button" class="btn btn-success btn-close" data-bs-dismiss="modal">確認</button>
+		</div>
+		</div>
+	</div>
+</div>
+
 </html>
 
 
@@ -139,7 +154,12 @@
 					<td>${item.price}</td>
 					<td>${item.quantity}</td>
 					<td>${item.quantity * item.price}</td>
-					<td><button class="btn btn-danger" onclick="removeItem(${i})">刪除</button></td>
+					<td rowspan="2" class="aligns-middle"><button class="btn btn-danger" onclick="removeItem(${i})">刪除</button></td>
+				</tr>
+				<tr>
+					<td colspan="5">
+						${(item.options) ? '&emsp;' + item.options : ''}
+					</td>
 				</tr>
 			`);
 		}
@@ -156,7 +176,8 @@
 		const phone = $('#phone').val();
 		if (name == '' || phone == '')
 		{
-			alert('請輸入取餐人姓名及電話');
+			$('#submitModalLabel').text('請輸入取餐人姓名及電話');
+			$('#submitModal').modal('show');
 			return;
 		}
 		const data = {
@@ -176,13 +197,15 @@
 			success: function(response) {
 				if(response)
 				{
-					alert('訂單送出成功');
+					$('#submitModalLabel').text('訂單送出成功');
+					$('#submitModal').modal('show');
 					// localStorage.removeItem('cart');
 					// location.href = './';
 				}
 				else
 				{
-					alert('訂單送出失敗');
+					$('#submitModalLabel').text('訂單送出失敗');
+					$('#submitModal').modal('show');
 				}
 			},
 			error: function(xhr, status, error) {
@@ -192,6 +215,10 @@
 	}
 	$(document).ready(function() {
 		displayCart();
+
+		$('.btn-close').click(function() {
+			$('#submitModal').modal('hide');
+		});
 	});
 
 </script>

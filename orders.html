@@ -1,0 +1,140 @@
+<!doctype html>
+<html lang="en">
+<head>
+	<!-- Required meta tags -->
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+	<!-- Bootstrap CSS -->
+	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.4.1/dist/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" integrity="sha512-z3gLpd7yknf1YoNbCzqRKc4qyor8gaKU1qmn+CShxbuBusANI9QpRohGBreCFkKxLhei6S9CQXFEbbKuqLg0DA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+
+	<style>
+		.dropdowns {
+			margin: 20px;
+			height: 100px;
+			background-color: lightgray;
+			display: flex;
+			justify-content: center;
+			align-items: center;
+			flex-wrap: wrap;
+		}
+
+		.orders-cards {
+			margin: 20px;
+			/* min-height: 500px; */
+			max-height: 95vh;
+			overflow-y: auto;
+			display: flex;
+			justify-content: center;
+			align-items: center;
+			flex-wrap: wrap;
+			padding: 0 5em;
+		}
+
+		.about-us {
+			/* height: 0px; */
+			display: flex;
+			background-color: gray;
+			justify-content: center;
+			align-items: center;
+		}
+
+	</style>
+	<title>早安公雞</title>
+</head>
+<body>
+	<nav class="navbar navbar-expand-lg navbar-light bg-light">
+		<a class="navbar-brand" href="./">早安公雞 農場晨食</a>
+		<ul class="nav justify-content-center ml-auto">
+		</ul>
+	</nav>
+
+	<div class="dropdowns">
+		<h5><span id="restaurantName"></span>&ensp;|&ensp;本日訂單</h5>
+    </div>
+
+	<div class="orders-cards">
+	</div>
+	<div class="about-us">
+		<p>Copyright © 2023 All rights reserved</p>
+	</div>
+
+	<script src="https://code.jquery.com/jquery-3.7.0.js" integrity="sha256-JlqSTELeR4TLqP0OG9dxM7yDPqX1ox/HfgiSLBj8+kM=" crossorigin="anonymous"></script>
+	<script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
+	<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.4.1/dist/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/js/all.min.js" integrity="sha512-uKQ39gEGiyUJl4AI6L+ekBdGKpGw4xJ55+xyJG7YFlJokPNYegn9KwQ3P8A7aFQAUtUsAQHep+d/lrGqrbPIDQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+</body>
+</html>
+
+
+<script>
+
+//get url parameter
+function getUrlParameter(sParam) {
+	var sPageURL = window.location.search.substring(1),
+		sURLVariables = sPageURL.split('&'),
+		sParameterName,
+		i;
+
+	for(i = 0; i < sURLVariables.length; i++) {
+		sParameterName = sURLVariables[i].split('=');
+
+		if(sParameterName[0] === sParam) {
+			return sParameterName[1] === undefined ? true : decodeURIComponent(sParameterName[1]);
+		}
+	}
+};
+
+function getRestaurants(restaurant) {
+	const _url = (restaurant != undefined) ? 'backend/getOrders.php?restaurant=' + restaurant : 'backend/getOrders.php';	
+	console.log(_url);
+	$.ajax({
+		url: _url,
+		method: 'GET',
+		dataType: 'json',
+		success: function(response) {
+			$(".orders-cards").empty();
+			for (let i = 0; i < response.length; i++) {
+				
+				let items = `<ul class="list-group list-group-flush">`;
+				const itens = JSON.parse(response[i].cart);
+				for (const j in itens) {
+					let options = (itens[j].options) ? `<br><small class="text-muted">${itens[j].options}</small>` : '';
+					items += `<li class="list-group-item">${itens[j].quantity} x ${itens[j].name}${options}</li>`;
+				}
+				items += `</ul>`;
+
+
+				$(".orders-cards").append(`
+				<div class="col-12 col-lg-4 col-sm-6 mb-3">
+					<div class="card">
+						<div class="card-header">
+							取餐時間：${response[i].pickup}
+						</div>
+						<div class="card-body">
+							${items}
+						</div>
+						<div class="card-footer text-muted">
+							${response[i].name}（${response[i].phone}）
+						</div>
+					</div>
+				</div>
+				`);
+			}
+
+		},
+		error: function(xhr, status, error) {
+			console.log('Request failed: ' + status);
+		}
+	});
+}
+
+$(document).ready(function() {
+	getRestaurants(getUrlParameter('restaurant'));
+	$('#restaurantName').text(getUrlParameter('restaurant'));
+});
+
+
+</script>
+

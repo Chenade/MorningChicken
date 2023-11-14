@@ -121,6 +121,36 @@
 	<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.4.1/dist/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/js/all.min.js" integrity="sha512-uKQ39gEGiyUJl4AI6L+ekBdGKpGw4xJ55+xyJG7YFlJokPNYegn9KwQ3P8A7aFQAUtUsAQHep+d/lrGqrbPIDQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 </body>
+
+<div class="modal fade" id="categoryModal" tabindex="-1" aria-labelledby="categoryModalLabel" aria-hidden="true">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h5 class="modal-title" id="categoryModalLabel">加入購物車</h5>
+				<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">X</button>
+			</div>
+			<div class="modal-body">
+				<div id="catagory_A" class="options d-none">
+					<!-- 從這裡開始複製 -->
+					<div class="form-group">
+						<input type="checkbox" id="checkbox1" name="checkbox1" value="加蛋">
+						<label for="checkbox1">加蛋</label>
+					</div>
+					<!-- 這樣算一組 -->
+				</div>
+				<div id="catagory_B" class="options d-none"></div>
+				<div id="catagory_C" class="options d-none"></div>
+				<div id="catagory_D" class="options d-none"></div>
+				<div id="catagory_E" class="options d-none"></div>
+				<div id="catagory_F" class="options d-none"></div>
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-secondary btn-close" data-bs-dismiss="modal">Close</button>
+				<button type="button" class="addCart btn btn-primary">加入購物車</button>
+			</div>
+		</div>
+	</div>
+</div>
 </html>
 
 
@@ -143,65 +173,93 @@
 	};
 
 	$.ajax({
-			url: 'backend/restaurant.php?id=' + getUrlParameter('id'),
+		url: 'backend/restaurant.php?id=' + getUrlParameter('id'),
+		method: 'GET',
+		dataType: 'json',
+		success: function(response) {
+			if (response[0])
+			{
+				let _this = response[0];
+				$('#info').empty();
+				$('#info').append('<h3 id="restaurant_name">' + _this.name + '</h3>');
+				$('#info').append('<h6>' + _this.address + '</h6>');
+				$('#info').append('<h6>' + _this.telephone + '</h6>');
+				$('#info').append('<div><i class="fa-solid fa-star"></i>&nbsp;' + _this.star + '</div>');
+			}
+
+		},
+		error: function(xhr, status, error) {
+			console.log('Request failed: ' + status);
+		}
+	});
+
+	function getMenu(category)
+	{
+		$.ajax({
+			url: 'backend/menu.php?category=' + category,
 			method: 'GET',
 			dataType: 'json',
 			success: function(response) {
-				if (response[0])
-				{
-					let _this = response[0];
-					$('#info').empty();
-					$('#info').append('<h3 id="restaurant_name">' + _this.name + '</h3>');
-					$('#info').append('<h6>' + _this.address + '</h6>');
-					$('#info').append('<h6>' + _this.telephone + '</h6>');
-					$('#info').append('<div><i class="fa-solid fa-star"></i>&nbsp;' + _this.star + '</div>');
-				}
+				console.log(response);
+				$('.menuList').empty();	
 
+				for (const i in response) {
+					let _this = response[i];
+					$('.menuList').append(`
+							<div class="card menuCard" style="width: 18rem;">
+								<img src="./image/${_this.image}" class="card-img-top" alt="meals-pic">
+								<div class="card-body">
+									<h5 class="card-title">${_this.name}</h5>
+									<p class="card-text">NT$ ${_this.price}</p>
+									<button class="CartOption btn btn-primary" data-category="${category}">加入購物車</button>
+								</div>
+							</div>
+							`);
+				}
 			},
 			error: function(xhr, status, error) {
 				console.log('Request failed: ' + status);
 			}
 		});
-
-		
-		function getMenu(cat)
-		{
-			$.ajax({
-				url: 'backend/menu.php?category=' + cat,
-				method: 'GET',
-				dataType: 'json',
-				success: function(response) {
-					console.log(response);
-					$('.menuList').empty();	
-
-					for (const i in response) {
-						let _this = response[i];
-						$('.menuList').append(`
-								<div class="card menuCard" style="width: 18rem;">
-									<img src="./image/${_this.image}" class="card-img-top" alt="meals-pic">
-									<div class="card-body">
-										<h5 class="card-title">${_this.name}</h5>
-										<p class="card-text">NT$ ${_this.price}</p>
-										<button class="addCart btn btn-primary"> + </button>
-									</div>
-								</div>
-								`);
-					}
-				},
-				error: function(xhr, status, error) {
-					console.log('Request failed: ' + status);
-				}
-			});
 	}
 
 	$(document).ready(function() {
+
+		let selected = null;
+
 		getMenu('A');
 
+		$(document).on('click', '.CartOption', function() {
+			const category = $(this).data('category');
+			$("#categoryModal").modal('show');
+			$("#categoryModal").find('.options').addClass('d-none');
+			$("#categoryModal").find('#catagory_' + category).removeClass('d-none');
+			selected = $(this).parent().parent();
+		});
+
 		$(document).on('click', '.addCart', function() {
-			let _this = $(this).parent().parent();
+			let _this = selected;
 			let name = _this.find('.card-title').text();
 			let price = _this.find('.card-text').text().replace('NT$ ', '');
 			let id = getUrlParameter('id');
+
+			// find category which is displaying
+			let category = null;
+			$('.options').each(function() {
+				if (!$(this).hasClass('d-none'))
+				{
+					category = $(this).attr('id').replace('catagory_', '');
+				}
+			});
+
+			// get option checked in category
+			let options = "";
+			$('#catagory_' + category).find('input[type="checkbox"]').each(function() {
+				if ($(this).is(':checked'))
+				{
+					options += $(this).val() + ',';
+				}
+			});
 
 			const restaurant_name = $('#restaurant_name').text();
 			localStorage.setItem('restaurant_name', restaurant_name);
@@ -215,7 +273,7 @@
 			else
 			{
 				for (const i in cart) {
-					if (cart[i].id == id && cart[i].name == name)
+					if (cart[i].id == id && cart[i].name == name && cart[i].options == options)
 					{
 						cart[i].quantity++;
 						localStorage.setItem('cart', JSON.stringify(cart));
@@ -227,9 +285,15 @@
 				'id': id,
 				'name': name,
 				'price': price,
-				'quantity': 1
+				'quantity': 1,
+				'options': options,
 			});
 			localStorage.setItem('cart', JSON.stringify(cart));
+			$("#categoryModal").modal('hide');
+		});
+
+		$('.btn-close').click(function() {
+			$("#categoryModal").modal('hide');
 		});
 	});
 
