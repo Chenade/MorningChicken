@@ -153,11 +153,11 @@
 					<td>${item.name}</td>
 					<td>${item.price}</td>
 					<td>${item.quantity}</td>
-					<td>${item.quantity * item.price}</td>
+					<td rowspan="2" >${item.quantity * item.price + parseFloat(item.option_price)}</td>
 					<td rowspan="2" class="aligns-middle"><button class="btn btn-danger" onclick="removeItem(${i})">刪除</button></td>
 				</tr>
 				<tr>
-					<td colspan="5">
+					<td colspan="4">
 						${(item.options) ? '&emsp;' + item.options : ''}
 					</td>
 				</tr>
@@ -199,7 +199,8 @@
 				{
 					$('#submitModalLabel').text('訂單送出成功');
 					$('#submitModal').modal('show');
-					// localStorage.removeItem('cart');
+					localStorage.removeItem('cart');
+					localStorage.removeItem('restaurant_name');
 					// location.href = './';
 				}
 				else
